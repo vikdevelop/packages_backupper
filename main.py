@@ -48,7 +48,7 @@ class PKGBackerWindow(Gtk.Window):
         mainBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.add(mainBox)
         
-        self.button_link = Gtk.LinkButton.new_with_label(uri="https://github.com/vikdevelop", label="How to use this app?")
+        self.button_link = Gtk.LinkButton.new_with_label(uri="https://github.com/vikdevelop/packages_backer/wiki/About-Package-backer", label="About")
         mainBox.pack_start(self.button_link, True, True, 0)
         
         self.label = Gtk.Label()
