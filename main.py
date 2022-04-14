@@ -8,12 +8,12 @@ from gi.repository import Gtk, GLib
 
 date = date.today()
 
-class FlatpakWindow(Gtk.Window):
+class PKGBackerWindow(Gtk.Window):
     def __init__(self, *args, **kwargs):
         Gtk.Window.__init__(self, title="Package backer")
         self.set_default_size(600, 200)
 
-        mainBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=1)
+        mainBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.add(mainBox)
         
         self.button_link = Gtk.LinkButton.new_with_label(uri="https://github.com/vikdevelop", label="How to use this app?")
@@ -21,14 +21,26 @@ class FlatpakWindow(Gtk.Window):
         
         self.label = Gtk.Label()
         mainBox.pack_start(self.label, True, True, 0)
-        self.entry = Gtk.Entry()
-        self.entry.set_text("Enter path to packages list or packages, want you install")
-        mainBox.pack_start(self.entry, True, True, 0)
         
+        self.label_h1 = Gtk.Label()
+        self.label_h1.set_markup("<b>Create package list</b>")
+        mainBox.pack_start(self.label_h1, True, True, 0)
+        
+        self.entry = Gtk.Entry()
+        self.entry.set_text("Enter name of packages, want you install")
+        mainBox.pack_start(self.entry, True, True, 0)
         
         self.button_create = Gtk.Button(label="Create")
         self.button_create.connect("clicked", self.on_button_create)
         mainBox.pack_start(self.button_create, True, True, 0)
+        
+        self.label_h2 = Gtk.Label()
+        self.label_h2.set_markup("<b>Install packages from package list</b>")
+        mainBox.pack_start(self.label_h2, True, True, 0)
+        
+        self.entry2 = Gtk.Entry()
+        self.entry2.set_text("Enter path to package list")
+        mainBox.pack_start(self.entry2, True, True, 0)
         
         self.button_importb = Gtk.Button(label="Import")
         self.button_importb.connect("clicked", self.on_button_importb)
@@ -62,8 +74,8 @@ class FlatpakWindow(Gtk.Window):
     def importb(self):
         print("IMPORT CLICKED....")
         HOME = os.path.expanduser('~')
-        entry1 = self.entry.get_text()
-        with open('%s' % entry1) as jsonFile:
+        entry2 = self.entry2.get_text()
+        with open('%s' % entry2) as jsonFile:
             jsonObject = json.load(jsonFile)
             jsonFile.close()
         
@@ -98,7 +110,7 @@ class FlatpakWindow(Gtk.Window):
             print("Pacman")
             
         self.label.set_markup("<b>Done!</b> All packages has been installed!")
-win = FlatpakWindow()
+win = PKGBackerWindow()
 win.show_all()
 win.connect("delete-event", Gtk.main_quit)
 Gtk.main()
