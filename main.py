@@ -5,8 +5,40 @@ import json
 from datetime import date
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
-
+HOME = os.path.expanduser('~')
 date = date.today()
+
+class Dialog_create(Gtk.Dialog):
+    def __init__(self, parent):
+        super().__init__(title="Package list has been created!", transient_for=parent, flags=0)
+        self.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
+        )
+
+        self.set_default_size(150, 100)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Done!</b> Package list is in the directory: <i>%s/PKG_LISTS/package-list_%s.json</i>. \nYou can now use this PKG list to import PKGS on Linux click on Import button!" % (HOME, date))
+
+        box = self.get_content_area()
+        box.add(label)
+        self.show_all()
+        
+class Dialog_import(Gtk.Dialog):
+    def __init__(self, parent):
+        super().__init__(title="Package has been installed!", transient_for=parent, flags=0)
+        self.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK
+        )
+
+        self.set_default_size(150, 100)
+
+        label = Gtk.Label()
+        label.set_markup("<b>Done!</b> All packages has been installed!")
+
+        box = self.get_content_area()
+        box.add(label)
+        self.show_all()
 
 class PKGBackerWindow(Gtk.Window):
     def __init__(self, *args, **kwargs):
@@ -23,7 +55,7 @@ class PKGBackerWindow(Gtk.Window):
         mainBox.pack_start(self.label, True, True, 0)
         
         self.label_h1 = Gtk.Label()
-        self.label_h1.set_markup("<b>Create package list</b>")
+        self.label_h1.set_markup("<b>Creation package list</b>")
         mainBox.pack_start(self.label_h1, True, True, 0)
         
         self.entry = Gtk.Entry()
@@ -35,7 +67,7 @@ class PKGBackerWindow(Gtk.Window):
         mainBox.pack_start(self.button_create, True, True, 0)
         
         self.label_h2 = Gtk.Label()
-        self.label_h2.set_markup("<b>Install packages from package list</b>")
+        self.label_h2.set_markup("<b>Installation packages from package list</b>")
         mainBox.pack_start(self.label_h2, True, True, 0)
         
         self.entry2 = Gtk.Entry()
@@ -60,7 +92,6 @@ class PKGBackerWindow(Gtk.Window):
         Gtk.main_quit()
 
     def create(self):
-        HOME = os.path.expanduser('~')
         entry1 = self.entry.get_text()
         if not os.path.exists("%s/PKG_LISTS" % HOME):
             os.makedirs('%s/PKG_LISTS' % HOME)
@@ -69,11 +100,18 @@ class PKGBackerWindow(Gtk.Window):
             f.write('"packages": "%s"\n' % entry1)
             f.write('}')
         print("Package list has been created! Is in directory: %s/PKG_LISTS/package_list_%s.json" % (HOME, date))
-        self.label.set_markup("<b>Done!</b> Package list is in the directory: <i>%s/PKG_LISTS/package-list_%s.json</i>. \nYou can now use this PKG list to import PKGS on Linux click on Import button!" % (HOME, date))
+        # Dialog_create window
+        dialog_c = Dialog_create(self)
+        response_c = dialog_c.run()
+
+        if response_c == Gtk.ResponseType.OK:
+            print("The OK button was clicked")
+        elif response_c == Gtk.ResponseType.CANCEL:
+            print("The Cancel button was clicked")
+
+        dialog_c.destroy()
         
     def importb(self):
-        print("IMPORT CLICKED....")
-        HOME = os.path.expanduser('~')
         entry2 = self.entry2.get_text()
         with open('%s' % entry2) as jsonFile:
             jsonObject = json.load(jsonFile)
@@ -109,7 +147,16 @@ class PKGBackerWindow(Gtk.Window):
             print("Zypper")
             print("Pacman")
             
-        self.label.set_markup("<b>Done!</b> All packages has been installed!")
+        # Dialog_import window
+        dialog_m = Dialog_import(self)
+        response_m = dialog_m.run()
+
+        if response_m == Gtk.ResponseType.OK:
+            print("The OK button was clicked")
+        elif response_m == Gtk.ResponseType.CANCEL:
+            print("The Cancel button was clicked")
+
+        dialog_m.destroy()
 win = PKGBackerWindow()
 win.show_all()
 win.connect("delete-event", Gtk.main_quit)
