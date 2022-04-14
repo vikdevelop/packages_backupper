@@ -42,13 +42,13 @@ class Dialog_import(Gtk.Dialog):
 
 class PKGBackerWindow(Gtk.Window):
     def __init__(self, *args, **kwargs):
-        Gtk.Window.__init__(self, title="Package backer")
+        Gtk.Window.__init__(self, title="Packages backupper")
         self.set_default_size(600, 200)
 
         mainBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.add(mainBox)
         
-        self.button_link = Gtk.LinkButton.new_with_label(uri="https://github.com/vikdevelop/packages_backer/wiki/About-Package-backer", label="About")
+        self.button_link = Gtk.LinkButton.new_with_label(uri="https://github.com/vikdevelop/packages_backupper/wiki/About-Package-backer", label="About")
         mainBox.pack_start(self.button_link, True, True, 0)
         
         self.label = Gtk.Label()
