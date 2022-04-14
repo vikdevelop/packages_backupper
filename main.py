@@ -120,25 +120,25 @@ class PKGBackerWindow(Gtk.Window):
         packages = jsonObject['packages']
         
         if os.path.exists('/usr/bin/dnf'):
-            os.system('pkexec dnf install %s' % packages)
+            os.system('pkexec dnf install -y %s' % packages)
             print('\033[1m' + 'Done! All packages is installed. Please ignore prints below, they are related to other package managers and distributions :)' + '\033[0m')
         else:
             print("Sorry. I didn't found DNF (Fedora) package manager. I trying find other package manager...")
             
         if os.path.exists('/usr/bin/apt'):
-            os.system('pkexec apt install %s' % packages)
+            os.system('pkexec apt install -y %s' % packages)
             print('\033[1m' + 'Done! All packages is installed. Please ignore prints below, they are related to other package managers and distributions :)' + '\033[0m')
         else:
             print("Sorry. I didn't found APT (Debian, Ubuntu, Linux Mint etc.) package manager. I trying found other package manager...")
         
         if os.path.exists('/usr/bin/zypper'):
-            os.system('%s zypper install' % packages)
+            os.system('%s zypper install -y' % packages)
             print('\033[1m' + 'Done! All packages is installed. Please ignore prints below, they are related to other package managers and distributions :)' + '\033[0m')
         else: 
             print("Sorry. I didn't found Zypper (openSUSE) package manager. I trying found other package manager...")
             
         if os.path.exists('/usr/bin/pacman'):
-            os.system('pkexec pacman -S %s' % packages)
+            os.system('pkexec pacman -S -y %s' % packages)
             print('\033[1m' + 'Done! All packages is installed. Please ignore prints below, they are related to other package managers and distributions :)' + '\033[0m')
         else:
             print("Sorry. I didn't found Pacman (Arch Linux, Manjaro, Garuda, Cutefish OS etc.) package manager and other package managers. So, you will try using other distro with supported package managers:")
@@ -157,6 +157,7 @@ class PKGBackerWindow(Gtk.Window):
             print("The Cancel button was clicked")
 
         dialog_m.destroy()
+        
 win = PKGBackerWindow()
 win.show_all()
 win.connect("delete-event", Gtk.main_quit)
